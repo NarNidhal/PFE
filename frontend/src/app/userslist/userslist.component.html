@@ -1,0 +1,35 @@
+<div class="container">
+    <h2>Users List</h2>
+    <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+    <!-- <button routerLink="/register" class="reg-button">Add User</button> -->
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>FullName</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let user of users | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }" key="user.id">
+                <td>{{ user.id }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.role }}</td>
+
+                <td>
+                    <button class="delete-button" (click)="deleteUser(user.id)">Delete</button>
+                    <button class="update-button" (click)="navigateToUpdate(user.id)">Update</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
+
+
+</div>
+<br><br>
+<br>
+<br>

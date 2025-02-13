@@ -1,0 +1,108 @@
+<div class="container">
+    <div class="left-side">
+      <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+      
+      <h2>Team Management</h2>
+      
+      <!-- Create Team Section -->
+      <form (submit)="createTeam()">
+        <div class="form-group">
+          <label for="teamName">Team Name:</label>
+          <input id="teamName" type="text" [(ngModel)]="teamName" name="teamName" placeholder="Enter team name" required />
+        </div>
+        <button type="submit">Create Team</button>
+      </form>
+    
+      <form (submit)="assignUserToTeam()">
+        <div class="form-group">
+          <label for="userId">Select User:</label>
+          <select id="userId" [(ngModel)]="userId" name="userId" class="custom-select"   required>
+            <option value="" disabled selected >Choose a user</option>
+            <ng-container *ngFor="let user of users">
+              <option *ngIf=" user.role !== 'ADMIN' && user.role !== 'SUPERMANAGER'" [value]="user.id">
+                {{ user.username }} ==> {{ user.role }}
+              </option>
+            </ng-container>         
+           </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="teamId">Select Team:</label>
+          <select id="teamId" [(ngModel)]="teamId" name="teamId" class="custom-select" required>
+            <option value="" disabled selected>Choose a team</option>
+            <option *ngFor="let team of teams" [value]="team.id ">{{ team.teamName }}</option>
+          </select>
+        </div>
+      
+        <button type="submit">Assign User</button>
+      </form>
+      
+    
+      <!-- Unassign User from Team Section -->
+      <form (submit)="unassignUserFromTeam()">
+        <div class="form-group">
+          <label for="userId">Select User:</label>
+          <select id="userId" [(ngModel)]="userId" name="userId" class="custom-select" required>
+            <option value="" disabled selected>Choose a user</option>
+            <ng-container *ngFor="let user of users">
+              <option *ngIf="user.role !== 'ADMIN' && user.role !== 'SUPERMANAGER'" [value]="user.id">
+                {{ user.username }} ==> {{ user.role }}
+              </option>
+            </ng-container>          </select>
+        </div>
+        <button type="submit">Unassign User</button>
+      </form>
+      
+      <!-- Delete Team Section 
+      <form (submit)="deleteTeam()">
+        <div class="form-group">
+          <label for="teamIdDelete">Team ID:</label>
+          <input id="teamIdDelete" type="number" [(ngModel)]="teamId" name="teamId" placeholder="Enter team ID" required />
+        </div>
+        <button type="submit">Delete Team</button>
+      </form>-->
+    
+      <!-- Get Team by Name Section 
+      <form (submit)="getTeamByName()">
+        <div class="form-group">
+          <label for="teamNameSearch">Team Name:</label>
+          <input id="teamNameSearch" type="text" [(ngModel)]="teamName" name="teamName" placeholder="Enter team name" required />
+        </div>
+        <button type="submit">Get Team</button>
+      </form>-->
+    </div>
+  
+    <div class="right-side">
+      <h2>All Teams</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Team ID</th>
+            <th>Team Name</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let team of teams">
+            <td>{{ team.id }}</td>
+            <td>{{ team.teamName }}</td>
+            <td>
+              <button class="view-btn" (click)="viewTeamUsers(team.id, team.teamName)">View Members</button>
+              <button class="delete-btn" (click)="deleteTeam2(team.id)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- Team Modal -->
+    <app-team-modal *ngIf="selectedTeamMembers.length > 0" 
+      [teamName]="selectedTeamName" 
+      [users]="selectedTeamMembers"
+      (close)="selectedTeamMembers = []">
+</app-team-modal>
+      
+  
+    
+  </div>
+  
