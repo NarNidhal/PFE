@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { UsersService } from '../users.service';
 import { NgxPaginationModule } from 'ngx-pagination';
 
@@ -8,7 +8,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 @Component({
   selector: 'app-userslist',
   standalone: true,
-  imports: [CommonModule, RouterLink,NgxPaginationModule],
+  imports: [CommonModule,NgxPaginationModule],
   templateUrl: './userslist.component.html',
   styleUrl: './userslist.component.css'
 })
@@ -18,8 +18,8 @@ export class UserslistComponent implements OnInit {
 
   users: any[] = [];
   errorMessage: string = '';
-  currentPage: number = 1;  // Track the current page
-  itemsPerPage: number = 5; // Maximum 5 users per page
+  currentPage: number = 1;  
+  itemsPerPage: number = 5; 
   
   constructor(
     private readonly userService: UsersService,

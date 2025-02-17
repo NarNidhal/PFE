@@ -16,8 +16,8 @@ export const routes: Routes = [
     {path: 'profile', component: ProfileComponent, canActivate: [usersGuard]},
     {path: 'update/:id', component: UpdateuserComponent, canActivate: [usersGuard]},
     {path: 'users', component: UserslistComponent, canActivate:[adminGuard]},
-    {path: 'teams', component: TeamManagementComponent},
-    {path: 'teams/:id/users', component: TeamModalComponent},
+    {path: 'teams', component: TeamManagementComponent },
+    {path: 'teams/:id/users', component: TeamModalComponent , canActivate: [usersGuard]},
 
 
     {path: '**', component: LoginComponent},

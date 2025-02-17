@@ -13,6 +13,9 @@
     color: #343a40;
     text-align: center;
 }
+table tr:hover {
+    background-color: #dadddf; 
+  }
 
 .reg-button {
     display: block;

@@ -2,6 +2,7 @@ package com.phegondev.usersmanagementsystem.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,7 +28,7 @@ public class OurUsers implements UserDetails {
 
     @ManyToOne
     @JoinColumn(name = "team_id")
-    @JsonBackReference
+    //@JsonManagedReference  // This annotation ensures the team is serialized correctly
     private Team team;
 
     @Override

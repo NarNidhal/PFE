@@ -1,5 +1,6 @@
 package com.phegondev.usersmanagementsystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
@@ -22,6 +23,6 @@ public class Team {
     private String teamName;
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @JsonBackReference  // This prevents the recursive serialization of users in the team
     private List<OurUsers> users;
 }

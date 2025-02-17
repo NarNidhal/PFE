@@ -1,11 +1,11 @@
 <div class="container">
-    <div class="left-side">
+    <div class="left-side" *ngIf="isAdmin">
       <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
       
       <h2>Team Management</h2>
       
       <!-- Create Team Section -->
-      <form (submit)="createTeam()">
+      <form (submit)="createTeam()" >
         <div class="form-group">
           <label for="teamName">Team Name:</label>
           <input id="teamName" type="text" [(ngModel)]="teamName" name="teamName" placeholder="Enter team name" required />
@@ -19,8 +19,8 @@
           <select id="userId" [(ngModel)]="userId" name="userId" class="custom-select"   required>
             <option value="" disabled selected >Choose a user</option>
             <ng-container *ngFor="let user of users">
-              <option *ngIf=" user.role !== 'ADMIN' && user.role !== 'SUPERMANAGER'" [value]="user.id">
-                {{ user.username }} ==> {{ user.role }}
+              <option *ngIf="  !user.team && user.role !== 'ADMIN' && user.role !== 'SUPERMANAGER'" [value]="user.id">
+               Member: {{ user.name }}        Role: {{ user.role }}     Team: {{ user.team ? user.team.teamName : 'No Team' }}
               </option>
             </ng-container>         
            </select>
@@ -45,8 +45,8 @@
           <select id="userId" [(ngModel)]="userId" name="userId" class="custom-select" required>
             <option value="" disabled selected>Choose a user</option>
             <ng-container *ngFor="let user of users">
-              <option *ngIf="user.role !== 'ADMIN' && user.role !== 'SUPERMANAGER'" [value]="user.id">
-                {{ user.username }} ==> {{ user.role }}
+              <option *ngIf=" user.team &&  user.role !== 'ADMIN' && user.role !== 'SUPERMANAGER'" [value]="user.id">
+                Member: {{ user.name }}        Role: {{ user.role }}     Team: {{ user.team ? user.team.teamName : 'No Team' }}
               </option>
             </ng-container>          </select>
         </div>
@@ -72,23 +72,25 @@
       </form>-->
     </div>
   
-    <div class="right-side">
+    <div class="right-side" [ngClass]="{ 'full-width': !isAdmin }">
       <h2>All Teams</h2>
-      <table>
+      <table >
         <thead>
           <tr>
-            <th>Team ID</th>
             <th>Team Name</th>
+            <th>Members Count</th> <!-- New column -->
+
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let team of teams">
-            <td>{{ team.id }}</td>
+          <tr *ngFor="let team of teams " (click)="viewTeamUsers(team.id, team.teamName)">
             <td>{{ team.teamName }}</td>
+            <td>{{ getMembersCount(team.id) }}</td> <!-- Show member count -->
+
             <td>
               <button class="view-btn" (click)="viewTeamUsers(team.id, team.teamName)">View Members</button>
-              <button class="delete-btn" (click)="deleteTeam2(team.id)">Delete</button>
+              <button *ngIf="isAdmin" class="delete-btn" (click)="deleteTeam2(team.id)">Delete</button>
             </td>
           </tr>
         </tbody>
@@ -96,13 +98,13 @@
     </div>
     
     <!-- Team Modal -->
-    <app-team-modal *ngIf="selectedTeamMembers.length > 0" 
+    <app-team-modal *ngIf="selectedTeamMembers && selectedTeamMembers.length > 0" 
       [teamName]="selectedTeamName" 
       [users]="selectedTeamMembers"
       (close)="selectedTeamMembers = []">
-</app-team-modal>
+    </app-team-modal>
       
-  
+
     
   </div>
   

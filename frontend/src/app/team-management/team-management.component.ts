@@ -12,7 +12,7 @@ import { TeamModalComponent } from '../team-modal/team-modal.component';
   imports: [FormsModule, CommonModule,TeamModalComponent],
   templateUrl: './team-management.component.html',
   styleUrls: ['./team-management.component.css'],
-  providers: [TeamService]
+  providers: [TeamService],
 })
 export class TeamManagementComponent {
 
@@ -25,13 +25,19 @@ export class TeamManagementComponent {
   users: any[] = []; // Store list of users
   selectedTeamName: string = '';
   selectedTeamMembers: any[] = []; // Store members for the modal
-
+  isAuthenticated: boolean = false;
+  isAdmin: boolean = false;
+  isUser: boolean = false;
 
   constructor(private teamService: TeamService, private router: Router, private userService: UsersService){ }
+
+
   ngOnInit(): void {
     this.getAllTeams();
     this.loadUsers(); // Fetch users when component loads
-
+    this.isAuthenticated = this.userService.isAuthenticated();
+    this.isAdmin = this.userService.isAdmin();
+    this.isUser = this.userService.isUser();
   }
   async loadUsers() {
     try {
@@ -49,7 +55,7 @@ export class TeamManagementComponent {
   getAllTeams() {
     this.teamService.getAllTeams().subscribe(
       (response) => {
-        console.log('Teams:', response);  // Log the response to check
+       // console.log('Teams:', response);  // Log the response to check
         this.teams = response.teamsList;  // Assign the teamsList array to the teams variable
         this.message = 'Teams retrieved successfully!';
       },
@@ -59,12 +65,17 @@ export class TeamManagementComponent {
       }
     );
   }
+  // Get the count of members in a team
+  getMembersCount(teamId: number): number {
+    // Filter the users who belong to the team with the given teamId
+    return this.users.filter(user => user.team?.id === teamId).length;
+  }
   // Fetch team members when clicking on a team
   openTeamModal(team: any) {
     this.selectedTeamName = team.teamName;
     this.teamService.getUsersByTeamId(team.id).subscribe(
       (response) => {
-        this.selectedTeamMembers = response.members || [];
+        this.selectedTeamMembers = response.members ?? [];
       },
       (error) => {
         this.selectedTeamMembers = [];
@@ -167,9 +178,9 @@ deleteTeam2(teamId: number) {
   viewTeamUsers(teamId: number, teamName: string) {
     this.teamService.getUsersByTeamId(teamId).subscribe(
       (response) => {
-        if (response.statusCode === 200 && response.ourUsersList) {
+        if (response.statusCode === 200 ) {
           this.selectedTeamName = teamName;
-          this.selectedTeamMembers = response.ourUsersList; // Assign the users list
+          this.selectedTeamMembers = response.ourUsersList ??[]; // Assign the users list
         } else {
           this.selectedTeamMembers = [];
         }

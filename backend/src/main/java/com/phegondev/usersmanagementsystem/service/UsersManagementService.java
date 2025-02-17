@@ -123,7 +123,7 @@ public class UsersManagementService {
         ReqRes reqRes = new ReqRes();
 
         try {
-            List<OurUsers> result = usersRepo.findAll();
+            List<OurUsers> result = usersRepo.findAllWithTeams();
             if (!result.isEmpty()) {
                 reqRes.setOurUsersList(result);
                 reqRes.setStatusCode(200);
